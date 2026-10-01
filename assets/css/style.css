@@ -1,0 +1,716 @@
+/* =====================================================================
+   PAINTS & POTIONS - Painting Inspiration
+   assets/css/style.css
+
+   Colours are sampled from the real logo artwork, so the page ground
+   and the logo plate are the same aubergine.
+
+   Layout note: the magazine arrangement of the gallery is done here,
+   in CSS, using multi-column + :nth-of-type(). The JavaScript only
+   outputs a plain list of photos - it never positions anything.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------
+   1. TOKENS
+   --------------------------------------------------------------- */
+:root {
+    /* brand - sampled from logo/pnp-logo-web.jpg */
+    --plum:        #4A2141;
+    --plum-soft:   #5B2C4F;
+    --plum-deep:   #2E1228;
+    --cream:       #F2E2D2;
+
+    /* paper, for the gallery screens */
+    --paper:       #FBF5EC;
+    --paper-2:     #F2E9DB;
+    --ink:         #35202E;
+    --ink-soft:    #6E5665;
+
+    /* accents, used sparingly */
+    --gold:        #C9A05C;
+    --olive:       #6E7A4C;
+    --maroon:      #8A4038;
+    --walnut:      #7A5436;
+
+    /* focus ring - dark enough to read on paper */
+    --focus:       #8A6A2E;
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino,
+             "Times New Roman", serif;
+    --sans:  ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+             Roboto, Helvetica, Arial, sans-serif;
+
+    --wrap: 1120px;
+
+    /* Every photo in images/ is 736px wide at most, so a "feature"
+       photo is capped here - any wider and it would visibly soften. */
+    --feature-max: 720px;
+}
+
+/* On the dark screens the ring needs to be light instead. */
+.screen--cover,
+.lb {
+    --focus: #E8C68C;
+}
+
+
+/* ---------------------------------------------------------------
+   2. RESET / BASE
+   --------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* Several components below set a display value, which would otherwise
+   beat the browser default for [hidden]. This keeps hiding reliable. */
+[hidden] { display: none !important; }
+
+html {
+    background: var(--plum);
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Paint the overscroll area to match whichever screen is showing. */
+html:has(#screen-gallery:not([hidden])) { background: var(--paper); }
+
+body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 100%;
+    line-height: 1.6;
+    color: var(--ink);
+    background: transparent;
+    /* `clip`, not `hidden`: it stops stray horizontal overflow without
+       breaking position:sticky on the gallery top bar. */
+    overflow-x: clip;
+}
+
+img { max-width: 100%; }
+
+h1, h2, p { margin: 0; }
+
+button {
+    font: inherit;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+}
+
+/* The gallery heading is tabindex="-1": it is never reached by tabbing,
+   and only takes focus programmatically so screen readers land in the
+   right place when a topic opens. A ring there would just look like a
+   stray box around the title, so it is suppressed. Every element a
+   person can actually tab to keeps its ring. */
+.gallery__title:focus { outline: none; }
+
+.visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 200;
+    padding: 12px 18px;
+    background: var(--cream);
+    color: var(--plum);
+    font: 600 0.85rem/1 var(--sans);
+    text-decoration: none;
+}
+.skip-link:focus { left: 8px; top: 8px; }
+
+
+/* ---------------------------------------------------------------
+   3. THE DIVIDER  - the four-point star from the logo, in pure CSS
+   --------------------------------------------------------------- */
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: clamp(18px, 4vw, 30px) auto;
+    color: var(--gold);
+}
+.divider::before,
+.divider::after {
+    content: "";
+    height: 1px;
+    width: min(96px, 19vw);
+    background: linear-gradient(to right, transparent, currentColor, transparent);
+    opacity: 0.6;
+}
+.divider > i {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    background: currentColor;
+    clip-path: polygon(50% 0%, 59% 41%, 100% 50%, 59% 59%,
+                       50% 100%, 41% 59%, 0% 50%, 41% 41%);
+}
+.divider--light { color: var(--cream); }
+
+
+/* ===============================================================
+   4. SCREEN 1 - THE COVER
+   =============================================================== */
+.screen--cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100svh;
+    padding: clamp(26px, 7vw, 60px) clamp(16px, 5vw, 32px) clamp(40px, 9vw, 72px);
+    background: var(--plum);
+    /* a whisper of the texture that is in the logo artwork */
+    background-image:
+        radial-gradient(ellipse at 18% 8%,  rgba(255, 255, 255, 0.055), transparent 58%),
+        radial-gradient(ellipse at 82% 92%, rgba(0, 0, 0, 0.22),        transparent 62%);
+}
+
+.cover__head {
+    width: 100%;
+    max-width: 640px;
+    text-align: center;
+}
+
+.cover__logo {
+    display: block;
+    width: min(100%, 430px);
+    height: auto;
+    margin: 0 auto clamp(22px, 5vw, 36px);
+    border-radius: 3px;
+}
+
+.cover__title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 8.6vw, 3.1rem);
+    line-height: 1.06;
+    letter-spacing: 0.005em;
+    color: var(--cream);
+}
+
+.cover__lede {
+    margin-top: 12px;
+    font-size: clamp(0.92rem, 3.4vw, 1.02rem);
+    color: rgba(242, 226, 210, 0.72);
+}
+
+.cover__foot {
+    margin-top: clamp(26px, 6vw, 44px);
+    font-size: 0.76rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242, 226, 210, 0.42);
+}
+
+
+/* ---- topic cards ---------------------------------------------- */
+.topics {
+    width: 100%;
+    max-width: var(--wrap);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(14px, 3.2vw, 26px);
+}
+
+@media (min-width: 700px) {
+    .topics { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
+}
+
+.card {
+    position: relative;
+    /* flex rather than block: buttons do not reliably give their
+       children a resolvable 100% height across engines */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--plum-soft);
+    box-shadow: inset 0 0 0 1px rgba(242, 226, 210, 0.17);
+    cursor: pointer;
+    text-align: left;
+    /* wide and easy to hit on a phone, taller and more editorial
+       once there is room for several side by side */
+    aspect-ratio: 16 / 10;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+@media (min-width: 700px) {
+    .card { aspect-ratio: 3 / 4; }
+}
+
+/* the scrim that guarantees the title stays readable over any photo */
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(to top,
+        rgba(32, 12, 28, 0.94) 0%,
+        rgba(32, 12, 28, 0.74) 30%,
+        rgba(32, 12, 28, 0.26) 62%,
+        rgba(32, 12, 28, 0.04) 100%);
+}
+
+.card__media {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: linear-gradient(150deg, #5E3050 0%, #4A2141 48%, #3A2430 100%);
+}
+
+/* Cropping is deliberate here - this is decoration, not reference.
+   Photos inside the gallery keep their true proportions. */
+.card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* visible by default, same fail-safe reasoning as the gallery */
+    opacity: 0.8;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+}
+.card__media img.is-loaded { animation: card-photo-in 0.7s ease; }
+
+@keyframes card-photo-in {
+    from { opacity: 0;   transform: scale(1.04); }
+    to   { opacity: 0.8; transform: scale(1); }
+}
+
+/* a topic with no photos yet still looks intentional */
+.card__media--blank::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    background: var(--cream);
+    opacity: 0.17;
+    clip-path: polygon(50% 0%, 59% 41%, 100% 50%, 59% 59%,
+                       50% 100%, 41% 59%, 0% 50%, 41% 41%);
+}
+
+.card__label {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: clamp(16px, 3.6vw, 22px);
+}
+
+.card__kicker {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+.card__name {
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 5.6vw, 1.85rem);
+    line-height: 1.1;
+    color: var(--cream);
+}
+
+.card__count {
+    font-size: 0.73rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(242, 226, 210, 0.6);
+}
+
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: inset 0 0 0 1px rgba(242, 226, 210, 0.42),
+                    0 14px 34px rgba(20, 6, 17, 0.42);
+    }
+    .card:hover .card__media img.is-loaded { transform: scale(1.06); opacity: 0.88; }
+}
+
+.card:active { transform: translateY(0); }
+
+
+/* ===============================================================
+   5. SCREEN 2 - THE GALLERY
+   =============================================================== */
+.screen--gallery {
+    min-height: 100svh;
+    background: var(--paper);
+}
+
+/* ---- slim sticky bar ------------------------------------------ */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 54px;
+    padding: 8px clamp(14px, 4vw, 28px);
+    background: rgba(251, 245, 236, 0.88);
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+    backdrop-filter: blur(10px) saturate(1.3);
+    border-bottom: 1px solid rgba(53, 32, 46, 0.11);
+}
+
+.topbar__title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.backbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    min-height: 40px;
+    padding: 8px 15px 8px 11px;
+    border: 1px solid rgba(53, 32, 46, 0.2);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+.backbtn__arrow { font-size: 1rem; line-height: 1; }
+
+@media (hover: hover) {
+    .backbtn:hover {
+        background: var(--paper-2);
+        border-color: rgba(53, 32, 46, 0.36);
+    }
+}
+
+.backbtn--solid {
+    background: var(--plum);
+    border-color: var(--plum);
+    color: var(--cream);
+}
+@media (hover: hover) {
+    .backbtn--solid:hover { background: var(--plum-soft); border-color: var(--plum-soft); }
+}
+
+/* ---- gallery masthead ----------------------------------------- */
+.gallery__head {
+    max-width: 660px;
+    margin: clamp(30px, 7vw, 62px) auto clamp(22px, 5vw, 40px);
+    padding: 0 clamp(18px, 5vw, 28px);
+    text-align: center;
+}
+
+.gallery__kicker {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--walnut);
+}
+
+.gallery__title {
+    margin-top: 10px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 9.5vw, 3.4rem);
+    line-height: 1.03;
+    color: var(--ink);
+}
+
+.gallery__sub {
+    margin-top: 10px;
+    font-size: clamp(0.92rem, 3.4vw, 1.04rem);
+    color: var(--ink-soft);
+}
+
+
+/* ---------------------------------------------------------------
+   6. THE MAGAZINE LAYOUT
+
+   Multi-column is the one layout mode that gives true natural-height
+   masonry WITHOUT knowing each photo's dimensions - which is exactly
+   what we want, because the config holds filenames only.
+
+   Photos keep their real proportions here: width 100%, height auto,
+   and no object-fit. These are painting references, so the whole
+   picture has to stay visible.
+   --------------------------------------------------------------- */
+.gallery {
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: 0 clamp(14px, 4.5vw, 34px) clamp(30px, 8vw, 70px);
+    column-count: 1;
+    column-gap: clamp(14px, 3vw, 30px);
+}
+
+.shot {
+    margin: 0 0 clamp(14px, 3vw, 28px);
+    /* keep a photo from being sliced across two columns */
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.shot__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--paper-2);
+    cursor: zoom-in;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* The photo is visible by DEFAULT, and the fade-in is an animation
+   layered on top once it loads. Done the other way round - opacity:0
+   waiting for a transition - a single stalled transition would leave
+   a photo permanently invisible. The photos are the whole point of
+   this site, so they fail visible. */
+.shot img {
+    display: block;
+    width: 100%;
+    height: auto;          /* <- true proportions, never cropped */
+}
+/* no fill mode on purpose: outside the animation the image just
+   uses its normal, visible style */
+.shot img.is-loaded { animation: photo-in 0.5s ease; }
+
+@keyframes photo-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@media (hover: hover) {
+    .shot__btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(53, 32, 46, 0.17);
+    }
+}
+
+/* ---- rhythm on a phone (single column) ------------------------
+   Photos stay big enough to actually study - nothing drops below
+   86% of the column - but the edges alternate so it reads as a
+   spread rather than a stack. */
+@media (max-width: 679px) {
+    .shot:nth-of-type(4n + 2) { max-width: 88%; margin-right: auto; }
+    .shot:nth-of-type(6n + 5) { max-width: 86%; margin-left: auto; }
+    .shot:nth-of-type(7n + 1) { margin-top: clamp(18px, 5vw, 34px); }
+}
+
+/* ---- rhythm with room to breathe ------------------------------ */
+@media (min-width: 680px) {
+    .gallery { column-count: 2; column-gap: clamp(20px, 3.4vw, 36px); }
+
+    .shot:nth-of-type(9n + 3)  { max-width: 80%; }
+    .shot:nth-of-type(11n + 5) { max-width: 88%; margin-left: auto; }
+    .shot:nth-of-type(5n + 4)  { margin-bottom: clamp(26px, 5vw, 46px); }
+
+    /* The feature photo. Declared last so it wins over the rules
+       above when the counts happen to collide. Capped so it never
+       renders wider than the file actually is. */
+    .shot:nth-of-type(7n + 1) {
+        column-span: all;
+        max-width: var(--feature-max);
+        margin: clamp(18px, 4vw, 40px) auto clamp(24px, 5vw, 48px);
+    }
+}
+
+@media (min-width: 1040px) {
+    .gallery { column-count: 3; }
+}
+
+/* ---- the written breaks between photos ------------------------ */
+.interlude {
+    column-span: all;
+    max-width: 30ch;
+    margin: clamp(26px, 7vw, 58px) auto;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+    line-height: 1.5;
+    text-align: center;
+    color: var(--ink-soft);
+}
+
+/* ---- a topic with nothing in it yet --------------------------- */
+.empty {
+    column-span: all;
+    max-width: 38ch;
+    margin: clamp(26px, 9vw, 60px) auto clamp(40px, 12vw, 80px);
+    padding: 0 18px;
+    text-align: center;
+}
+.empty__title {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 5.2vw, 1.6rem);
+    color: var(--ink);
+}
+.empty__text {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+}
+
+/* ---- gallery footer ------------------------------------------- */
+.gallery__foot {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 20px clamp(48px, 12vw, 96px);
+    text-align: center;
+}
+.gallery__endnote {
+    margin-bottom: 18px;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+
+/* ===============================================================
+   7. LIGHTBOX
+   =============================================================== */
+.lb {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    animation: lb-in 0.22s ease both;
+}
+
+@keyframes lb-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.lb__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 8, 20, 0.94);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.lb__stage {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(60px, 11vw, 84px) clamp(12px, 4vw, 76px);
+}
+
+.lb__img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;        /* true shape, always */
+    border-radius: 2px;
+    box-shadow: 0 22px 64px rgba(0, 0, 0, 0.55);
+}
+.lb__img.is-loaded { animation: lb-photo-in 0.26s ease; }
+
+@keyframes lb-photo-in {
+    from { opacity: 0; transform: scale(0.985); }
+    to   { opacity: 1; transform: none; }
+}
+
+.lb__btn {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 1px solid rgba(242, 226, 210, 0.28);
+    border-radius: 50%;
+    background: rgba(24, 8, 20, 0.6);
+    color: var(--cream);
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+@media (hover: hover) {
+    .lb__btn:hover {
+        background: rgba(91, 44, 79, 0.85);
+        border-color: rgba(242, 226, 210, 0.6);
+    }
+}
+
+.lb__close {
+    top: max(14px, env(safe-area-inset-top, 0px));
+    right: max(14px, env(safe-area-inset-right, 0px));
+    font-size: 1.7rem;
+}
+.lb__prev,
+.lb__next {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+}
+.lb__prev { left: max(10px, env(safe-area-inset-left, 0px)); }
+.lb__next { right: max(10px, env(safe-area-inset-right, 0px)); }
+
+.lb__count {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: rgba(242, 226, 210, 0.62);
+}
+
+
+/* ===============================================================
+   8. REDUCED MOTION
+   =============================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+    /* The fades are animations with no fill mode, so cutting their
+       duration simply lands every photo on its normal visible style.
+       Nothing else is needed here. */
+}

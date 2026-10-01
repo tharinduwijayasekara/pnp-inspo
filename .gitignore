@@ -1,0 +1,7 @@
+# JetBrains IDE settings - local to your machine, not part of the site
+.idea/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini

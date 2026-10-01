@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Painting Inspiration &middot; Paints &amp; Potions</title>
+<meta name="description" content="A little book of painting ideas for your piece at Paints &amp; Potions art cafe. Pick what you're painting, then scroll for inspiration.">
+<meta name="theme-color" content="#4A2141">
+
+<!-- Favicon: the four-point star from the logo, drawn inline so it costs no extra request. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234A2141'/%3E%3Cpath d='M16 3.5 18.4 13.6 28.5 16 18.4 18.4 16 28.5 13.6 18.4 3.5 16 13.6 13.6Z' fill='%23F2E2D2'/%3E%3C/svg%3E">
+
+<!-- Relative path: works at the domain root AND at /pnp-inspo/ on GitHub Pages. -->
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<main id="main">
+
+  <!-- ============================================================
+       SCREEN 1 — the cover. Pick a piece.
+       The topic cards are built by JavaScript from the `topics`
+       object in assets/js/app.js. Nothing is hardcoded here.
+       ============================================================ -->
+  <section id="screen-topics" class="screen screen--cover">
+
+    <header class="cover__head">
+      <img class="cover__logo"
+           src="logo/pnp-logo-web.jpg"
+           width="1000" height="500"
+           alt="Paints &amp; Potions, Art Cafe">
+
+      <h1 class="cover__title">Painting Inspiration</h1>
+      <p class="cover__lede">Find something you&rsquo;d love to paint.</p>
+      <p class="divider divider--light" aria-hidden="true"><i></i></p>
+    </header>
+
+    <h2 class="visually-hidden">Choose what you&rsquo;re painting</h2>
+
+    <!-- Filled in by app.js -->
+    <div id="topic-list" class="topics"></div>
+
+    <footer class="cover__foot">
+      <p>Tap a piece to browse ideas.</p>
+    </footer>
+  </section>
+
+
+  <!-- ============================================================
+       SCREEN 2 — the gallery. Same page, just swapped in.
+       ============================================================ -->
+  <section id="screen-gallery" class="screen screen--gallery" hidden>
+
+    <div class="topbar">
+      <button type="button" class="backbtn" data-back>
+        <span class="backbtn__arrow" aria-hidden="true">&larr;</span> All Topics
+      </button>
+      <span class="topbar__title" id="topbar-title" aria-hidden="true"></span>
+    </div>
+
+    <header class="gallery__head">
+      <p class="gallery__kicker" id="gallery-kicker"></p>
+      <!-- tabindex="-1" so focus can be moved here when a topic opens -->
+      <h2 class="gallery__title" id="gallery-title" tabindex="-1"></h2>
+      <p class="gallery__sub" id="gallery-sub"></p>
+      <p class="divider" aria-hidden="true"><i></i></p>
+    </header>
+
+    <!-- Filled in by app.js. All magazine layout happens in CSS. -->
+    <div id="gallery" class="gallery"></div>
+
+    <footer class="gallery__foot">
+      <p class="divider" aria-hidden="true"><i></i></p>
+      <p class="gallery__endnote">That&rsquo;s everything for this piece.</p>
+      <button type="button" class="backbtn backbtn--solid" data-back>
+        <span class="backbtn__arrow" aria-hidden="true">&larr;</span> All Topics
+      </button>
+    </footer>
+  </section>
+
+</main>
+
+
+<!-- ============================================================
+     LIGHTBOX — hidden until a photo is tapped.
+     ============================================================ -->
+<div id="lightbox" class="lb" hidden role="dialog" aria-modal="true" aria-label="Inspiration photo viewer">
+  <div class="lb__backdrop" data-close></div>
+
+  <div class="lb__stage" data-close>
+    <img id="lb-img" class="lb__img" src="" alt="">
+  </div>
+
+  <button type="button" class="lb__btn lb__close" id="lb-close" aria-label="Close photo">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <button type="button" class="lb__btn lb__prev" id="lb-prev" aria-label="Previous photo">
+    <span aria-hidden="true">&lsaquo;</span>
+  </button>
+  <button type="button" class="lb__btn lb__next" id="lb-next" aria-label="Next photo">
+    <span aria-hidden="true">&rsaquo;</span>
+  </button>
+
+  <p class="lb__count" id="lb-count" aria-live="polite"></p>
+</div>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
