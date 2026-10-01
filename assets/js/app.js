@@ -28,7 +28,7 @@
 
           sun_catcher: {
               title: "Sun Catcher",
-              subtitle: "Find something you would love to paint.",
+              subtitle: "✨ Find something that inspires you. ✨",
               images: [
                   "sun-01.jpg",
                   "sun-02.jpg"
@@ -97,7 +97,7 @@ const topics = {
     // ---------- images/bubble_tray/   (10 images) ----------
     bubble_tray: {
         title: "Bubble Tray",
-        subtitle: "Find something you\u2019d love to paint.",
+        subtitle: "✨ Find something that inspires you. ✨",
         images: [
             "05ef8100d41013e2c608bda526802a86.jpg",
             "3551c50915b847944b1e563dc7a2e9f2.jpg",
@@ -115,7 +115,7 @@ const topics = {
     // ---------- images/clean_slate/   (9 images) ----------
     clean_slate: {
         title: "Clean Slate",
-        subtitle: "Find something you\u2019d love to paint.",
+        subtitle: "✨ Find something that inspires you. ✨",
         images: [
             "0be34dc94f1a86920af3da79a647abac.jpg",
             "494348d1d4193e56fc84de5551332672.jpg",
@@ -132,7 +132,7 @@ const topics = {
     // ---------- images/petite_heart/   (6 images) ----------
     petite_heart: {
         title: "Petite Heart",
-        subtitle: "Find something you\u2019d love to paint.",
+        subtitle: "✨ Find something that inspires you. ✨",
         images: [
             "08f9c7817aa7201b89baa12c12145abf.jpg",
             "32b6ede6b65cc222f5c8595d227d3228.jpg",
@@ -157,10 +157,7 @@ const topics = {
     /* Short editorial lines dropped between photos so a long gallery
        reads like a magazine rather than a grid. Edit freely. */
     var INTERLUDES = [
-        "Take the bit you like. Leave the rest.",
-        "Two colours and a steady hand is usually plenty.",
-        "Copy it closely, or let it wander.",
-        "The wobbly ones have the most character."
+        "Two colours and a steady hand is usually plenty."
     ];
     var INTERLUDE_EVERY = 7;   /* drop a line in after every 7th photo */
 
