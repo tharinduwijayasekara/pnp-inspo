@@ -520,12 +520,12 @@ button {
 }
 
 /* ---- rhythm on a phone (single column) ------------------------
-   Photos stay big enough to actually study - nothing drops below
-   86% of the column - but the edges alternate so it reads as a
-   spread rather than a stack. */
+   On a phone every photo runs the full width of the column. Indenting
+   or alternating the edges here just reads as misalignment rather
+   than as design, so the only variation is vertical breathing room.
+   The asymmetry belongs on wider screens, where there are real
+   columns for it to play against. */
 @media (max-width: 679px) {
-    .shot:nth-of-type(4n + 2) { max-width: 88%; margin-right: auto; }
-    .shot:nth-of-type(6n + 5) { max-width: 86%; margin-left: auto; }
     .shot:nth-of-type(7n + 1) { margin-top: clamp(18px, 5vw, 34px); }
 }
 
