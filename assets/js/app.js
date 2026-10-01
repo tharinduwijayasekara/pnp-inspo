@@ -157,7 +157,7 @@ const topics = {
     /* Short editorial lines dropped between photos so a long gallery
        reads like a magazine rather than a grid. Edit freely. */
     var INTERLUDES = [
-        "Two colours and a steady hand is usually plenty."
+        "Six colours and a steady hand is usually plenty."
     ];
     var INTERLUDE_EVERY = 7;   /* drop a line in after every 7th photo */
 
