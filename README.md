@@ -5,7 +5,7 @@ A painting-inspiration gallery for **Paints & Potions** art café.
 One QR code, one web page. A customer scans it, picks the piece they're painting, and scrolls
 through a magazine-style collection of design ideas for that exact shape.
 
-Live at: `https://USERNAME.github.io/pnp-inspo/` *(replace `USERNAME` with your GitHub username)*
+Live at: <https://tharinduwijayasekara.github.io/pnp-inspo/>
 
 Plain HTML, CSS and JavaScript. No npm, no build step, no server, no database.
 
@@ -192,7 +192,7 @@ Press `Ctrl+C` to stop the server.
 2. On GitHub, go to **Settings → Pages**.
 3. Under *Build and deployment*, set **Source** to **Deploy from a branch**.
 4. Choose branch **`main`** and folder **`/ (root)`**. Save.
-5. Wait a minute, then visit `https://USERNAME.github.io/pnp-inspo/`.
+5. Wait a minute, then visit `https://tharinduwijayasekara.github.io/pnp-inspo/`.
 
 Every path in the site is relative, so it works correctly under `/pnp-inspo/` without any config.
 
