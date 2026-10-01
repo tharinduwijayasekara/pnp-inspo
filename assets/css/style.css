@@ -179,8 +179,8 @@ button {
 
 .cover__logo {
     display: block;
-    width: min(100%, 430px);
-    height: auto;
+    width: auto;
+    min-height: 100px;
     max-height: 180px;
     margin: 0 auto clamp(22px, 5vw, 36px);
     border-radius: 3px;
