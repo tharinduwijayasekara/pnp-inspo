@@ -47,8 +47,7 @@
     --feature-max: 720px;
 }
 
-/* On the dark screens the ring needs to be light instead. */
-.screen--cover,
+/* On the lightbox (dark overlay) the ring needs to be light. */
 .lb {
     --focus: #E8C68C;
 }
@@ -169,11 +168,7 @@ button {
     align-items: center;
     min-height: 100svh;
     padding: clamp(26px, 7vw, 60px) clamp(16px, 5vw, 32px) clamp(40px, 9vw, 72px);
-    background: var(--plum);
-    /* a whisper of the texture that is in the logo artwork */
-    background-image:
-        radial-gradient(ellipse at 18% 8%,  rgba(255, 255, 255, 0.055), transparent 58%),
-        radial-gradient(ellipse at 82% 92%, rgba(0, 0, 0, 0.22),        transparent 62%);
+    background: var(--paper);
 }
 
 .cover__head {
@@ -196,13 +191,13 @@ button {
     font-size: clamp(2rem, 8.6vw, 3.1rem);
     line-height: 1.06;
     letter-spacing: 0.005em;
-    color: var(--cream);
+    color: var(--ink);
 }
 
 .cover__lede {
     margin-top: 12px;
     font-size: clamp(0.92rem, 3.4vw, 1.02rem);
-    color: rgba(242, 226, 210, 0.72);
+    color: var(--ink-soft);
 }
 
 .cover__foot {
@@ -210,7 +205,7 @@ button {
     font-size: 0.76rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(242, 226, 210, 0.42);
+    color: var(--ink-soft);
 }
 
 
